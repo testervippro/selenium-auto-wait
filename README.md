@@ -12,27 +12,21 @@ selenium-auto-wait automatically manages all weblement waits and makes you to wr
 ### Maven
 
 ```xml
+<!-- https://mvnrepository.com/artifact/io.github.testervippro/selenium-auto-wait -->
 <dependency>
-    <groupId>io.github.sudharsan-selvaraj</groupId>
+    <groupId>io.github.testervippro</groupId>
     <artifactId>selenium-auto-wait</artifactId>
     <version>1.0.2</version>
-</dependency> 
+</dependency>
 ```
 
-### Gradle
-
-```groovy
-implementation group: 'io.github.sudharsan-selvaraj', name: 'selenium-auto-wait', version: '1.0.2'
-```
-
-Also while downloading selenium, make sure to exclude `net.bytebuddy:byte-buddy` library by using
 
 ### Maven
 ```xml
 <dependency>
    <groupId>org.seleniumhq.selenium</groupId>
    <artifactId>selenium-java</artifactId>
-   <version>3.141.59</version>
+   <version>4.28.0</version>
    <exclusions>
       <exclusion>
          <groupId>net.bytebuddy</groupId>
@@ -41,14 +35,6 @@ Also while downloading selenium, make sure to exclude `net.bytebuddy:byte-buddy`
    </exclusions>
 </dependency>
 ```
-
-### Gradle
-```groovy
-implementation (group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.141.59') {
-   exclude group: 'net.bytebuddy', module: 'byte-buddy'
- }
-```
-
 ## Quickstart
 
 Initialize the wait plugin using
@@ -72,18 +58,33 @@ That's it. Now the driver object can be used in the test.
 ## Annotation Example:
 
 ```java
+
+import io.github.sudharsan_selvaraj.autowait.SeleniumWaitOptions;
+import io.github.sudharsan_selvaraj.autowait.SeleniumWaitPlugin;
+import io.github.sudharsan_selvaraj.autowait.annotations.IgnoreWait;
+import io.github.sudharsan_selvaraj.autowait.annotations.WaitProperties;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.Test;
+
+import java.time.Duration;
+
 public class WaitTest {
-    
+
     public WebDriver getDriver() {
         SeleniumWaitOptions options = SeleniumWaitOptions.builder()
                 .parseAnnotations(true)
                 .defaultWaitTime(Duration.ofSeconds(30))
                 .build();
-      
+
         SeleniumWaitPlugin seleniumWaitPlugin = new SeleniumWaitPlugin(new ChromeDriver(), options);
         return seleniumWaitPlugin.getDriver();
     }
-    
+
     @Test
     public void test() {
         WebDriver driver = getDriver();
@@ -101,20 +102,20 @@ public class WaitTest {
         driver.findElement(By.id("add-to-cart-button")).click();
         driver.findElement(By.id("attach-view-cart-button-form")).click();
     }
-    
+
     @IgnoreWait // will not automatically wait for any element interaction
     public void searchAmazonWithoutWait(WebDriver driver) {
         driver.get("https://www.amazon.in");
-        new WebDriverWait(driver, 10).until(ExpectedConditions.presenceOfElementLocated(By.id("twotabsearchtextbox")));
+        new WebDriverWait(driver, Duration.ofSeconds(30)).until(ExpectedConditions.presenceOfElementLocated(By.id("twotabsearchtextbox")));
         driver.findElement(By.id("twotabsearchtextbox")).sendKeys("oneplus 7", Keys.ENTER);
-        new WebDriverWait(driver, 10)
+        new WebDriverWait(driver, Duration.ofSeconds(30))
                 .until(ExpectedConditions.presenceOfElementLocated(By.partialLinkText("OnePlus 7 Pro")));
         driver.findElement(By.partialLinkText("OnePlus 7 Pro")).click();
         driver.switchTo().window(driver.getWindowHandles().toArray(new String[]{})[1]);
-        new WebDriverWait(driver, 10)
+        new WebDriverWait(driver, Duration.ofSeconds(30))
                 .until(ExpectedConditions.presenceOfElementLocated(By.id("add-to-cart-button")));
         driver.findElement(By.id("add-to-cart-button")).click();
-        new WebDriverWait(driver, 10)
+        new WebDriverWait(driver, Duration.ofSeconds(30))
                 .until(ExpectedConditions.elementToBeClickable(By.id("attach-view-cart-button-form")));
         driver.findElement(By.id("attach-view-cart-button-form")).click();
     }
@@ -133,6 +134,7 @@ public class WaitTest {
         driver.findElement(By.id("attach-view-cart-button-form")).click();
     }
 }
+
 ```
 
 
