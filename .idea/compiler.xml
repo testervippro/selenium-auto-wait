@@ -10,6 +10,12 @@
         <module name="selenium-auto-wait.test" />
         <module name="selenium-auto-wait.main" />
       </profile>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="selenium-auto-wait" />
+      </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="11" />
   </component>
