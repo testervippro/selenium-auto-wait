@@ -13,41 +13,12 @@ selenium-auto-wait automatically manages all weblement waits and makes you to wr
 
 ```xml
 <dependency>
-    <groupId>io.github.sudharsan-selvaraj</groupId>
+    <groupId>io.github.testervippro</groupId>
     <artifactId>selenium-auto-wait</artifactId>
-    <version>1.0.2</version>
+    <version>1.1.1</version>
 </dependency> 
 ```
 
-### Gradle
-
-```groovy
-implementation group: 'io.github.sudharsan-selvaraj', name: 'selenium-auto-wait', version: '1.0.2'
-```
-
-Also while downloading selenium, make sure to exclude `net.bytebuddy:byte-buddy` library by using
-
-### Maven
-```xml
-<dependency>
-   <groupId>org.seleniumhq.selenium</groupId>
-   <artifactId>selenium-java</artifactId>
-   <version>3.141.59</version>
-   <exclusions>
-      <exclusion>
-         <groupId>net.bytebuddy</groupId>
-         <artifactId>byte-buddy</artifactId>
-      </exclusion>
-   </exclusions>
-</dependency>
-```
-
-### Gradle
-```groovy
-implementation (group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.141.59') {
-   exclude group: 'net.bytebuddy', module: 'byte-buddy'
- }
-```
 
 ## Quickstart
 
@@ -72,52 +43,70 @@ That's it. Now the driver object can be used in the test.
 ## Annotation Example:
 
 ```java
-public class WaitTest {
-    
+public class AmazonTest {
+
+    WebDriver driver;
+    @BeforeSuite
+    public void setup() {
+        WebDriverManager.chromedriver().setup();
+
+    }
     public WebDriver getDriver() {
         SeleniumWaitOptions options = SeleniumWaitOptions.builder()
                 .parseAnnotations(true)
                 .defaultWaitTime(Duration.ofSeconds(30))
+                .packageToBeParsed("io.github.sudharsan_selvaraj")
                 .build();
-      
-        SeleniumWaitPlugin seleniumWaitPlugin = new SeleniumWaitPlugin(new ChromeDriver(), options);
+        SeleniumWaitPlugin<ChromeDriver> seleniumWaitPlugin = new SeleniumWaitPlugin<ChromeDriver>(new ChromeDriver(), options);
         return seleniumWaitPlugin.getDriver();
     }
-    
+
     @Test
     public void test() {
         WebDriver driver = getDriver();
-        searchAmazon(driver);
-        searchAmazonWithoutWait(driver);
+
+        runTestWthAutoWait(driver);
+        runTestIgnoreWait(driver);
         searchAmazonWithCustomWait(driver);
+
+        // driver.quit();
     }
 
-    public void searchAmazon(WebDriver driver) {
+    public void runTestWthAutoWait(WebDriver driver) {
         driver.get("https://www.amazon.in");
         driver.findElement(By.id("twotabsearchtextbox")).sendKeys("oneplus 7");
         driver.findElement(By.id("twotabsearchtextbox")).sendKeys(Keys.ENTER);
         driver.findElement(By.partialLinkText("OnePlus 7 Pro")).click();
         driver.switchTo().window(driver.getWindowHandles().toArray(new String[]{})[1]);
-        driver.findElement(By.id("add-to-cart-button")).click();
-        driver.findElement(By.id("attach-view-cart-button-form")).click();
+        driver.findElement(By.cssSelector("#add-to-cart-button")).click();
+
+        var expect ="Amazon.in Shopping Cart";
+        Assert.assertTrue(driver.getTitle().toLowerCase().equalsIgnoreCase(expect));
     }
-    
-    @IgnoreWait // will not automatically wait for any element interaction
-    public void searchAmazonWithoutWait(WebDriver driver) {
+
+
+    @IgnoreWait
+    public void runTestIgnoreWait(WebDriver driver) {
         driver.get("https://www.amazon.in");
-        new WebDriverWait(driver, 10).until(ExpectedConditions.presenceOfElementLocated(By.id("twotabsearchtextbox")));
+        new WebDriverWait(driver, Duration.ofSeconds(60)).until(ExpectedConditions.presenceOfElementLocated(By.id("twotabsearchtextbox")));
+
         driver.findElement(By.id("twotabsearchtextbox")).sendKeys("oneplus 7", Keys.ENTER);
-        new WebDriverWait(driver, 10)
+
+        new WebDriverWait(driver, Duration.ofSeconds(60))
                 .until(ExpectedConditions.presenceOfElementLocated(By.partialLinkText("OnePlus 7 Pro")));
+
         driver.findElement(By.partialLinkText("OnePlus 7 Pro")).click();
-        driver.switchTo().window(driver.getWindowHandles().toArray(new String[]{})[1]);
-        new WebDriverWait(driver, 10)
-                .until(ExpectedConditions.presenceOfElementLocated(By.id("add-to-cart-button")));
-        driver.findElement(By.id("add-to-cart-button")).click();
-        new WebDriverWait(driver, 10)
-                .until(ExpectedConditions.elementToBeClickable(By.id("attach-view-cart-button-form")));
-        driver.findElement(By.id("attach-view-cart-button-form")).click();
+        driver.switchTo().window(driver.getWindowHandles().toArray(new String[]{})[2]);
+
+        new WebDriverWait(driver, Duration.ofSeconds(60))
+                .until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("#add-to-cart-button")));
+
+        driver.findElement(By.cssSelector("#add-to-cart-button")).click();
+
+        var expect ="Amazon.in Shopping Cart";
+        Assert.assertTrue(driver.getTitle().toLowerCase().equalsIgnoreCase(expect));
     }
+
 
     @WaitProperties(
             timeout = 10, //custom wait time in seconds
@@ -128,11 +117,14 @@ public class WaitTest {
         driver.findElement(By.id("twotabsearchtextbox")).sendKeys("oneplus 7");
         driver.findElement(By.id("twotabsearchtextbox")).sendKeys(Keys.ENTER);
         driver.findElement(By.partialLinkText("OnePlus 7 Pro")).click();
-        driver.switchTo().window(driver.getWindowHandles().toArray(new String[]{})[1]);
+        driver.switchTo().window(driver.getWindowHandles().toArray(new String[]{})[3]);
         driver.findElement(By.id("add-to-cart-button")).click();
-        driver.findElement(By.id("attach-view-cart-button-form")).click();
+        var expect ="Amazon.in Shopping Cart";
+        Assert.assertTrue(driver.getTitle().toLowerCase().equalsIgnoreCase(expect));
+
     }
 }
+
 ```
 
 
