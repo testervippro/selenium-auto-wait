@@ -46,7 +46,7 @@ public class DriverEventListener implements SpyDriverListener {
         }
 
         if (!processFindElementCommand(command, options)) {
-            WebDriverWaitUtil webDriverWaitUtil = getWaitUtil(options.getDefaultWaitTime());
+            WebDriverWaitUtil webDriverWaitUtil = getWaitUtil(options.getDefaultWaitTime().getSeconds());
             if (command.getMethod().getName().matches("click|sendKeys|clear")) {
                 webDriverWaitUtil.waitForElementClickable(command.getElement());
             } else {
@@ -86,7 +86,7 @@ public class DriverEventListener implements SpyDriverListener {
         }
 
         if (locator != null) {
-            getWaitUtil(options.getDefaultWaitTime()).waitForElementPresent(locator);
+            getWaitUtil(options.getDefaultWaitTime().getSeconds()).waitForElementPresent(locator);
         }
         return false;
     }
@@ -148,8 +148,8 @@ public class DriverEventListener implements SpyDriverListener {
                 .build();
     }
 
-    private WebDriverWaitUtil getWaitUtil(Duration waitTime) {
-        return new WebDriverWaitUtil(driver, waitTime.getSeconds());
+    private WebDriverWaitUtil getWaitUtil(long waitTime) {
+        return new WebDriverWaitUtil(driver ,waitTime);
     }
 
     private Boolean ignoreWait(SeleniumWaitOptions options, Method m) {

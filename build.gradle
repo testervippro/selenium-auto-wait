@@ -4,8 +4,8 @@ plugins {
     id 'signing'
 }
 
-group 'io.github.sudharsan-selvaraj'
-version '1.0.2'
+group 'io.github.testervippro'
+version '1.1.2'
 
 repositories {
     mavenCentral()
@@ -69,20 +69,29 @@ publishing {
             url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
         }
     }
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(17)
+        }
+    }
+
 }
 
 dependencies {
-    implementation (group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.141.59')
-    api group: 'io.github.sudharsan-selvaraj', name: 'spydriver', version: '1.1.0'
+    implementation 'org.seleniumhq.selenium:selenium-java:4.28.0'
+    implementation 'io.github.testervippro:spydriver:1.1.1'
 
-    testImplementation group: 'io.github.bonigarcia', name: 'webdrivermanager', version: '4.4.3'
-    testImplementation group: 'org.testng', name: 'testng', version: '7.4.0'
+    testImplementation 'io.github.bonigarcia:webdrivermanager:4.4.3'
+    testImplementation 'org.testng:testng:7.4.0'
 
-    compileOnly 'org.projectlombok:lombok:1.18.8'
-    testCompile 'org.projectlombok:lombok:1.18.8'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.8'
-    annotationProcessor 'org.projectlombok:lombok:1.18.8'
+    compileOnly 'org.projectlombok:lombok:1.18.28'
+    annotationProcessor 'org.projectlombok:lombok:1.18.28'
+
+    testCompileOnly 'org.projectlombok:lombok:1.18.28'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.28'
+
 }
+
 
 test {
     useTestNG() {

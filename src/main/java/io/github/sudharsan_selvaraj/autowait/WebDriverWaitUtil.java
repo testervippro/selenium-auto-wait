@@ -7,11 +7,18 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-@AllArgsConstructor
+import java.time.Duration;
+
+
 public class WebDriverWaitUtil {
 
-    private final WebDriver driver;
-    private final long defaultWaitTime;
+    private  WebDriver driver;
+    private  Duration defaultWaitTime ;
+
+    public WebDriverWaitUtil(WebDriver driver,long timeOut ) {
+        this.driver = driver;
+        this.defaultWaitTime = Duration.ofSeconds(timeOut);
+    }
 
     public void waitForElementPresent(By locator) {
         webDriverWait()

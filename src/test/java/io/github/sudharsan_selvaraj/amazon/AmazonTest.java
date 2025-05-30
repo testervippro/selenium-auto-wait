@@ -50,22 +50,22 @@ public class AmazonTest {
         WebDriver driver = getDriver();
         driver.get("https://www.amazon.in");
 
-        new WebDriverWait(driver, 10).until(ExpectedConditions.presenceOfElementLocated(By.id("twotabsearchtextbox")));
+        new WebDriverWait(driver, Duration.ofSeconds(60)).until(ExpectedConditions.presenceOfElementLocated(By.id("twotabsearchtextbox")));
 
         driver.findElement(By.id("twotabsearchtextbox")).sendKeys("oneplus 7", Keys.ENTER);
 
-        new WebDriverWait(driver, 10)
+        new WebDriverWait(driver, Duration.ofSeconds(60))
                 .until(ExpectedConditions.presenceOfElementLocated(By.partialLinkText("OnePlus 7 Pro")));
 
         driver.findElement(By.partialLinkText("OnePlus 7 Pro")).click();
         driver.switchTo().window(driver.getWindowHandles().toArray(new String[]{})[1]);
 
-        new WebDriverWait(driver, 10)
+        new WebDriverWait(driver, Duration.ofSeconds(60))
                 .until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("#add-to-cart-button")));
 
         driver.findElement(By.cssSelector("#add-to-cart-button")).click();
 
-        new WebDriverWait(driver, 10)
+        new WebDriverWait(driver, Duration.ofSeconds(60))
                 .until(ExpectedConditions.elementToBeClickable(By.cssSelector("#attach-view-cart-button-form")));
 
         driver.findElement(By.cssSelector("#attach-view-cart-button-form")).click();

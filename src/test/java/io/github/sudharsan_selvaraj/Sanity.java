@@ -13,6 +13,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
+import java.time.Duration;
+
 
 public class Sanity {
 
@@ -48,17 +50,17 @@ public class Sanity {
         WebDriver driver = new ChromeDriver();
         driver.get("https://react-redux.realworld.io/");
         driver.findElement(By.linkText("Sign in")).click();
-        WebElement email = new WebDriverWait(driver, 10)
+        WebElement email = new WebDriverWait(driver, Duration.ofSeconds(60))
                 .until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("input[type='email']")));
         email.sendKeys("abc@tester.com");
         driver.findElement(By.cssSelector("input[type='password']")).sendKeys("Qwerty@123");
         driver.findElement(By.xpath("//button[@type='submit']")).click();
 
-        WebElement username = new WebDriverWait(driver, 10)
+        WebElement username = new WebDriverWait(driver, Duration.ofSeconds(60))
                 .until(ExpectedConditions.presenceOfElementLocated(By.partialLinkText("TesterABC123")));
         username.click();
         driver.findElement(By.partialLinkText("Home")).click();
-        WebElement tag = new WebDriverWait(driver, 10)
+        WebElement tag = new WebDriverWait(driver, Duration.ofSeconds(60))
                 .until(ExpectedConditions.presenceOfElementLocated(By.xpath(".//*[contains(@class,'tag-pill')][text()='HITLER']")));
         tag.click();
     }

@@ -15,7 +15,7 @@ public class SeleniumWaitOptions {
     private final boolean ignoreWait = false;
 
     @Builder.Default
-    private final Duration defaultWaitTime = Duration.ofSeconds(10);
+    private final Duration defaultWaitTime = Duration.ofSeconds(60);
 
     @Builder.Default
     private final List<String> excludedMethods = Collections.emptyList();
